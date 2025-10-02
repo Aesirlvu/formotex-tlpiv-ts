@@ -17,7 +17,7 @@ export const env = {
       host: process.env.DB_HOST || "localhost",
       database: process.env.DB_NAME || "gestion_inv_tlpiv",
       user: process.env.DB_USER || "root",
-      password: process.env.DB_PASSWORD || "password",
+      password: process.env.DB_PASSWORD,
     },
   },
 };

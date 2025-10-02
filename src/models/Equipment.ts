@@ -4,7 +4,7 @@ import { Database } from "../config/database.js";
 const sequelizeConnection = Database.getInstance().getConnection();
 
 export class Equipment extends Model {
-  public id!: number;
+  declare id: number;
   public name!: string;
   public type!: string;
   public serialNumber!: string;
@@ -22,6 +22,7 @@ Equipment.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
     },
     name: {

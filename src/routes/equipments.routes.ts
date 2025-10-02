@@ -2,9 +2,12 @@ import { Router } from "express";
 import { EquipmentController } from "../controllers/equipment.controller.js";
 import { Validator } from "../middlewares/validator.js";
 import { EquipmentService } from "../services/equipment.service.js";
+import { EquipmentRepository } from "../repositories/equipment.repository.js";
 
 const router = Router();
-const equipmentController = new EquipmentController(new EquipmentService());
+const equipmentRepository = new EquipmentRepository();
+const equipmentService = new EquipmentService(equipmentRepository);
+const equipmentController = new EquipmentController(equipmentService);
 
 // ? CRUD básico
 router.get(

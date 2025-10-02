@@ -11,9 +11,9 @@ export class EquipmentController {
   }
 
   async getEquipmentById(req: Request, res: Response) {
-    const equipment = await this.equipmentService.findById(
-      Number(req.params.id)
-    );
+    const { id } = req.params;
+
+    const equipment = await this.equipmentService.findById(Number(id));
     if (!equipment)
       return res.status(404).json({ error: "Equipo no encontrado" });
     res.json(equipment);

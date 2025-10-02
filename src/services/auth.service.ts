@@ -1,34 +1,72 @@
-import { compareSync, encryptSync } from "../helpers/bcrypt.js";
+import { ERROR_MESSAGES } from "../helpers/errors.js";
 import { signJwt } from "../helpers/jwt.js";
-import { User } from "../models/User.js";
+import type { IRegister } from "../interfaces/IRegister.js";
+import type { User } from "../models/User.js";
+import type { UserService } from "./user.service.js";
 
 export class AuthService {
-  async login(email: string, password: string) {
-    const user = await User.findOne({ where: { email } });
-    if (!user) throw new Error("Usuario no encontrado");
+  private userService: UserService;
 
-    if (!compareSync(password, user.password)) {
-      throw new Error("Contraseña incorrecta");
+  constructor(userService: UserService) {
+    this.userService = userService;
+  }
+
+  async login(email: string, password: string): Promise<string> {
+    const user = await this.userService.getUserByEmail(email);
+
+    await this.userService.validatePassword(email, password);
+
+    const payload = {
+      id: user?.id,
+      email: user?.email,
+      role: user?.role,
+    };
+
+    return signJwt(payload);
+  }
+
+  async register(data: IRegister): Promise<User> {
+    let { username, email, password, role } = data;
+
+    if (!role) {
+      role = "user";
     }
 
-    return signJwt({ id: user.id, role: user.role });
-  }
-
-  async register(data: Partial<User>) {
-    const exists = await User.findOne({ where: { email: data.email } });
-    if (exists) throw new Error("El email ya está registrado");
-
-    const user = await User.create({
-      username: data.username,
-      email: data.email,
-      password: encryptSync(data.password!),
-      role: data.role || "user",
+    const newUser = await this.userService.createUser({
+      username,
+      email,
+      password,
+      role,
     });
 
-    return user;
+    return newUser;
   }
 
-  async logout(userId: number) {
-    return true;
+  async logout() {
+    // ? implementar lógica de logout si es necesario (ej. invalidar tokens, etc.)
   }
+
+  async checkRole(role: string): Promise<void> {
+    if (!role) {
+      throw ERROR_MESSAGES.AUTH.ROLE.FORBIDDEN;
+    }
+  }
+
+  async checkPermissions(permissions: string[]) {}
+
+  // ? metodos para verificar roles específicos
+  // ? estos metodos si podrian incluir req, res, next
+  // ? para usarlos como middlewares en las rutas
+  async isAdmin() {}
+
+  // ? y para verificar si está autenticado
+  static isAuthenticated() {}
+  static destroySession() {
+    // ? implementar lógica para destruir sesión si es necesario
+  }
+
+  // async logout(id: number) {
+  //   // ? implementar lógica de logout si es necesario (ej. invalidar tokens, etc.)
+
+  // }
 }

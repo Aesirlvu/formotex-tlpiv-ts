@@ -5,15 +5,13 @@ export class Database {
   private static instance: Database;
   private sequelize: Sequelize;
 
-  // !: ACCESS DENIED
-  // TODO: revisar usuario y contraseña de la base de datos en el .env
   private constructor() {
+    console.log("Conectando a la base de datos...");
+    console.log(env.db.config);
     this.sequelize = new Sequelize({
       database: env.db.config.database!,
       username: env.db.config.user!,
       password: env.db.config.password!,
-      host: env.db.config.host!,
-      port: env.db.config.port,
       dialect: "mysql",
     });
   }
@@ -29,7 +27,7 @@ export class Database {
     try {
       await this.sequelize.authenticate();
       console.log("Base de datos conectada!.");
-      await this.sequelize.sync({ alter: true, force: false });
+      await this.sequelize.sync({ alter: true, force: true });
     } catch (error) {
       console.error("Error al conectar a la base de datos:", error);
     }
@@ -47,7 +45,13 @@ export class Database {
   }
 
   public ping() {
-    return this.sequelize.authenticate();
+    if (!this.sequelize) {
+      console.error("No hay conexión a la base de datos.");
+    } else {
+      this.sequelize.authenticate();
+      console.log("Ping a la db exitosa!");
+    }
+    return;
   }
 
   public getConnection() {

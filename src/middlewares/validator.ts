@@ -4,29 +4,44 @@ import type { Request, Response, NextFunction } from "express";
 export class Validator {
   static userLogin() {
     return [
-      body("email").isEmail().notEmpty().withMessage("Email is required"),
+      body("email").isEmail().notEmpty().withMessage("El email es requerido"),
       body("password")
         .isString()
-        .isLength({ min: 6 })
-        .withMessage("Contraseña debe tener al menos 6 caracteres"),
+        .notEmpty()
+        .withMessage("La contraseña es requerida"),
     ];
   }
   static userRegister() {
     return [
-      body("username").isString().notEmpty(),
-      body("email").isEmail().notEmpty(),
+      body("username")
+        .isString()
+        .notEmpty()
+        .withMessage("El campo username es requerido"),
+      body("email")
+        .isEmail()
+        .notEmpty()
+        .withMessage("El campo email es requerido"),
       body("password")
         .isString()
         .isLength({ min: 6 })
-        .withMessage("La contraseña debe tener al menos 6 caracteres"),
-      body("role").isIn(["admin", "user"]).optional(),
+        .withMessage("El campo password es requerido"),
+      body("role")
+        .isIn(["admin", "user"])
+        .optional()
+        .withMessage("Rol inválido"),
     ];
   }
 
   static equipmentCreate() {
     return [
-      body("name").isString().notEmpty().withMessage("El nombre es requerido"),
-      body("type").isString().notEmpty().withMessage("El tipo es requerido"),
+      body("name")
+        .isString()
+        .notEmpty()
+        .withMessage("El nombre del equipo es requerido"),
+      body("type")
+        .isString()
+        .notEmpty()
+        .withMessage("El tipo del equipo es requerido"),
       body("serialNumber")
         .isString()
         .notEmpty()

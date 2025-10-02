@@ -1,13 +1,14 @@
 import { DataTypes, Model } from "sequelize";
 import { Database } from "../config/database.js";
+import { encryptSync } from "../helpers/bcrypt.js";
 
 const sequelizeConnection = Database.getInstance().getConnection();
 
 export class User extends Model {
-  public id!: number;
+  declare id: number;
   public username!: string;
   public email!: string;
-  public password!: string;
+  declare password: string;
   public role!: "admin" | "user";
 
   public readonly createdAt!: Date;
@@ -19,6 +20,7 @@ User.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
     },
     username: {
@@ -49,3 +51,9 @@ User.init(
     updatedAt: "updatedAt",
   }
 );
+
+User.beforeSave(async (user: User) => {
+  if (user.changed("password")) {
+    user.password = encryptSync(user.password, 10);
+  }
+});

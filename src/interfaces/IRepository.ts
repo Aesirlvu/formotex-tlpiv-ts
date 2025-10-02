@@ -1,4 +1,4 @@
-export interface IService<T> {
+export interface IRepository<T> {
   findById(id: number): Promise<T | null>;
   findAll(): Promise<T[]>;
   create(data: Partial<T>): Promise<T>;
