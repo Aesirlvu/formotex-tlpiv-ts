@@ -19,7 +19,10 @@ export const ERROR_MESSAGES = {
   },
   AUTH: {
     ROLE: {
-      FORBIDDEN: { message: "Acceso prohibido", success: false },
+      FORBIDDEN: {
+        message: "Acceso denegado, se requieren privilegios de administrador",
+        success: false,
+      },
       MISSING: { message: "Rol faltante", success: false },
     },
     PERMISSIONS: {},

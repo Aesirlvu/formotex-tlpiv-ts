@@ -3,13 +3,19 @@ import { env } from "../config/environment.js";
 
 const config = env.jwt;
 
+interface JwtPayload {
+  id: number;
+  email: string;
+  role: string;
+}
+
 export const signJwt = (payload: string | object) => {
   return jwt.sign(payload, config.secret, { expiresIn: config.expiresIn });
 };
 
 export const verify = (token: string) => {
   try {
-    const decoded = jwt.verify(token, config.secret);
+    const decoded = jwt.verify(token, config.secret) as JwtPayload;
     return { valid: true, expired: false, decoded };
   } catch (error) {
     console.error("JWT Verification Error:", {

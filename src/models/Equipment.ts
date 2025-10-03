@@ -5,16 +5,16 @@ const sequelizeConnection = Database.getInstance().getConnection();
 
 export class Equipment extends Model {
   declare id: number;
-  public name!: string;
-  public type!: string;
-  public serialNumber!: string;
-  public location!: string;
-  public status!: "active" | "inactive" | "maintenance";
-  public purchaseDate!: Date;
+  declare name: string;
+  declare type: string;
+  declare serialNumber: string;
+  declare location: string;
+  declare status: "active" | "inactive" | "maintenance";
+  declare purchaseDate: Date;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
+  declare readonly deletedAt: Date | null;
 }
 
 Equipment.init(

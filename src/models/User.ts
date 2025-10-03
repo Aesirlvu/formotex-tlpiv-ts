@@ -6,13 +6,13 @@ const sequelizeConnection = Database.getInstance().getConnection();
 
 export class User extends Model {
   declare id: number;
-  public username!: string;
-  public email!: string;
+  declare username: string;
+  declare email: string;
   declare password: string;
-  public role!: "admin" | "user";
+  declare role: "admin" | "user";
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 User.init(

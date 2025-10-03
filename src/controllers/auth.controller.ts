@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { AuthService } from "../services/auth.service.js";
 import type { User } from "../models/User.js";
+import type { AuthRequest } from "../types/AuthRequest.js";
 
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -30,12 +31,17 @@ export class AuthController {
     }
   }
 
-  // async logout(req: Request, res: Response) {
-  //   try {
-  //     await this.authService.logout(req.user.id);
-  //     res.status(204).send();
-  //   } catch (err: any) {
-  //     res.status(400).json({ error: err.message });
-  //   }
-  // }
+  async logout(req: AuthRequest, res: Response): Promise<void> {
+    const { user } = req;
+    try {
+      if (user) {
+        req.user = undefined;
+      }
+      res.status(204).json({
+        message: "Logout exitoso",
+      });
+    } catch (err: any) {
+      res.status(400).json({ error: err.message });
+    }
+  }
 }

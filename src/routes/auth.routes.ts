@@ -4,6 +4,7 @@ import { Validator } from "../middlewares/validator.js";
 import { AuthService } from "../services/auth.service.js";
 import { UserRepository } from "../repositories/user.repositories.js";
 import { UserService } from "../services/user.service.js";
+import { Authorization } from "../middlewares/authorization.js";
 
 const router = Router();
 
@@ -29,10 +30,10 @@ router.post(
   authController.register.bind(authController)
 );
 
-// router.post(
-//   "/logout",
-//   Authorization.isAuthenticated(),
-// //   authController.logout.bind(authController)
-// );
+router.post(
+  "/logout",
+  Authorization.isAuthenticated,
+  authController.logout.bind(authController)
+);
 
 export default router;

@@ -42,10 +42,6 @@ export class AuthService {
     return newUser;
   }
 
-  async logout() {
-    // ? implementar lógica de logout si es necesario (ej. invalidar tokens, etc.)
-  }
-
   async checkRole(role: string): Promise<void> {
     if (!role) {
       throw ERROR_MESSAGES.AUTH.ROLE.FORBIDDEN;
@@ -53,20 +49,4 @@ export class AuthService {
   }
 
   async checkPermissions(permissions: string[]) {}
-
-  // ? metodos para verificar roles específicos
-  // ? estos metodos si podrian incluir req, res, next
-  // ? para usarlos como middlewares en las rutas
-  async isAdmin() {}
-
-  // ? y para verificar si está autenticado
-  static isAuthenticated() {}
-  static destroySession() {
-    // ? implementar lógica para destruir sesión si es necesario
-  }
-
-  // async logout(id: number) {
-  //   // ? implementar lógica de logout si es necesario (ej. invalidar tokens, etc.)
-
-  // }
 }
