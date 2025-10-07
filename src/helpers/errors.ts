@@ -65,6 +65,11 @@ export const ERROR_MESSAGES = {
       message: "El equipo ya está asignado a un usuario",
       success: false,
     },
+    ONLY_ASSIGNED_TO_SELF: {
+      message: "Solo puedes gestionar tu propio equipo",
+      success: false,
+    },
+
     NOT_ASSIGNED: {
       message: "El equipo no está asignado a ningún usuario",
       success: false,

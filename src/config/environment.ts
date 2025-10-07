@@ -9,7 +9,7 @@ export const env = {
   },
   jwt: {
     secret: process.env.JWT_SECRET || "jwt_secret_key",
-    expiresIn: Number(process.env.JWT_EXPIRES_IN) || 24,
+    expiresIn: process.env.JWT_EXPIRES_IN || "24h",
   },
   db: {
     config: {

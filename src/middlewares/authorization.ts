@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import { ERROR_MESSAGES } from "../helpers/errors.js";
-import type { AuthRequest } from "../types/AuthRequest.js";
 import { verify } from "../helpers/jwt.js";
 import { User } from "../models/User.js";
+import type { IRequest } from "../interfaces/IRequest.js";
 
 export class Authorization {
   static async isAuthenticated(
-    req: AuthRequest,
+    req: IRequest,
     res: Response,
     next: NextFunction
   ) {
@@ -39,7 +39,7 @@ export class Authorization {
     req.user = user;
     next();
   }
-  static async isAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+  static async isAdmin(req: IRequest, res: Response, next: NextFunction) {
     if (req.user?.role !== "admin") {
       return res.status(403).json(ERROR_MESSAGES.AUTH.ROLE.FORBIDDEN);
     }

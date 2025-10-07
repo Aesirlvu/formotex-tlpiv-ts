@@ -1,6 +1,6 @@
 import type { Request } from "express";
 
-export interface AuthRequest extends Request {
+export interface IRequest extends Request {
   user?:
     | {
         id: number;

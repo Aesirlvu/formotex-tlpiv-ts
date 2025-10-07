@@ -13,6 +13,10 @@ export class UserController {
 
     try {
       const user = await this.userService.getUserById(Number(id));
+      res.status(200).json({
+        message: "Usuario obtenido con éxito",
+        user,
+      });
     } catch (error) {
       res.status(404).json({ error: (error as Error).message });
     }

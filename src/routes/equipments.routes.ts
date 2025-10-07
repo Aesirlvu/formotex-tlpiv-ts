@@ -3,27 +3,30 @@ import { EquipmentController } from "../controllers/equipment.controller.js";
 import { Validator } from "../middlewares/validator.js";
 import { EquipmentService } from "../services/equipment.service.js";
 import { EquipmentRepository } from "../repositories/equipment.repository.js";
+import { Authorization } from "../middlewares/authorization.js";
 
 const router = Router();
 const equipmentRepository = new EquipmentRepository();
 const equipmentService = new EquipmentService(equipmentRepository);
 const equipmentController = new EquipmentController(equipmentService);
 
+router.use(Authorization.isAuthenticated);
+
 // ? CRUD básico
 router.get(
   "/",
-  //   Authorization.isAuthenticated(),
+  Authorization.isAdmin,
   equipmentController.getEquipment.bind(equipmentController)
 );
 router.get(
   "/:id",
-  //   Authorization.isAuthenticated(),
+  Authorization.isAdmin,
   equipmentController.getEquipmentById.bind(equipmentController)
 );
 
 router.post(
   "/",
-  //   Authorization.isAdmin(),
+  Authorization.isAdmin,
   Validator.equipmentCreate(),
   Validator.validate,
   equipmentController.createEquipment.bind(equipmentController)
@@ -31,7 +34,7 @@ router.post(
 
 router.put(
   "/:id",
-  //   Authorization.isAdmin(),
+  Authorization.isAdmin,
   Validator.equipmentUpdate(),
   Validator.validate,
   equipmentController.updateEquipment.bind(equipmentController)
@@ -39,39 +42,41 @@ router.put(
 
 router.delete(
   "/:id",
-  //   Authorization.isAdmin(),
+  Authorization.isAdmin,
   equipmentController.deleteEquipment.bind(equipmentController)
 );
 
 // Rutas extra
 router.post(
   "/:id/assign",
-  //   Authorization.isAdmin(),
+  Authorization.isAdmin,
   equipmentController.assignEquipmentToUser.bind(equipmentController)
 );
 router.post(
   "/:id/unassign",
-  //   Authorization.isAdmin(),
+  Authorization.isAdmin,
   equipmentController.unassignEquipmentFromUser.bind(equipmentController)
 );
 router.get(
   "/user/:userId",
-  //   Authorization.isAuthenticated(),
+  Authorization.isAuthenticated,
   equipmentController.getEquipmentByUserId.bind(equipmentController)
 );
 router.get(
   "/available",
-  //   Authorization.isAuthenticated(),
+  Authorization.isAuthenticated,
   equipmentController.getAvailableEquipment.bind(equipmentController)
 );
 router.put(
   "/:id/status",
-  //   Authorization.isAdmin(),
+  Authorization.isAdmin,
   equipmentController.updateEquipmentStatus.bind(equipmentController)
 );
-router.get(
-  "/serial/:serialNumber",
-  //   Authorization.isAuthenticated(),
+router.post(
+  "/serial/search",
+  Authorization.isAuthenticated,
+  Validator.equipmentSerialSearch(),
+  Validator.validate,
   equipmentController.getEquipmentBySerialNumber.bind(equipmentController)
 );
 

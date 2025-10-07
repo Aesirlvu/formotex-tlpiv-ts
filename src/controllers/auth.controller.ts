@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { AuthService } from "../services/auth.service.js";
 import type { User } from "../models/User.js";
-import type { AuthRequest } from "../types/AuthRequest.js";
+import type { IRequest } from "../interfaces/IRequest.js";
 
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -31,7 +31,7 @@ export class AuthController {
     }
   }
 
-  async logout(req: AuthRequest, res: Response): Promise<void> {
+  async logout(req: IRequest, res: Response): Promise<void> {
     const { user } = req;
     try {
       if (user) {

@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { Database } from "../config/database.js";
+import type { User } from "./User.js";
 
 const sequelizeConnection = Database.getInstance().getConnection();
 
@@ -11,7 +12,9 @@ export class Equipment extends Model {
   declare location: string;
   declare status: "active" | "inactive" | "maintenance";
   declare purchaseDate: Date;
+  declare userId: number | null;
 
+  declare user?: User;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
   declare readonly deletedAt: Date | null;
@@ -48,6 +51,11 @@ Equipment.init(
     purchaseDate: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: { model: "users", key: "id" },
     },
     createdAt: {
       type: DataTypes.DATE,
