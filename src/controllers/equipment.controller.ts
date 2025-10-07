@@ -5,7 +5,7 @@ import type { IRequest } from "../interfaces/IRequest.js";
 export class EquipmentController {
   constructor(private equipmentService: EquipmentService) {}
 
-  async getEquipment(req: IRequest, res: Response) {
+  async getEquipments(req: IRequest, res: Response) {
     const { user } = req;
 
     if (!user) {
@@ -236,6 +236,37 @@ export class EquipmentController {
     } catch (error: any) {
       if (error.message && error.success !== undefined) {
         return res.status(404).json(error);
+      }
+      res
+        .status(500)
+        .json({ error: "Error interno del servidor", success: false });
+    }
+  }
+
+  async getEquipmentStatus(req: IRequest, res: Response) {
+    const { id } = req.params;
+    const { user } = req;
+
+    try {
+      const equipment = await this.equipmentService.findById(
+        Number(id),
+        user?.role,
+        user?.id
+      );
+      res.status(200).json({
+        message: "Estado del equipo obtenido con éxito",
+        status: equipment?.status,
+        success: true,
+      });
+    } catch (error: any) {
+      if (error.message && error.success !== undefined) {
+        if (error.message.includes("Solo puedes gestionar")) {
+          return res.status(403).json(error);
+        }
+        if (error.message.includes("Equipo no encontrado")) {
+          return res.status(404).json(error);
+        }
+        return res.status(400).json(error);
       }
       res
         .status(500)

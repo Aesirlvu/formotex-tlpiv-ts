@@ -27,7 +27,7 @@ export class Database {
     try {
       await this.sequelize.authenticate();
       console.log("Base de datos conectada!.");
-      await this.sequelize.sync({ alter: true, force: true });
+      await this.sequelize.sync({ alter: true, force: false });
     } catch (error) {
       console.error("Error al conectar a la base de datos:", error);
     }

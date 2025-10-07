@@ -13,6 +13,7 @@ export class User extends Model {
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+  declare readonly deletedAt: Date;
 }
 
 User.init(
@@ -49,6 +50,9 @@ User.init(
     tableName: "users",
     createdAt: "createdAt",
     updatedAt: "updatedAt",
+    deletedAt: "deletedAt",
+    timestamps: true,
+    paranoid: true,
   }
 );
 

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx src/app.ts"
+    "dev": "tsx --watch src/app.ts",
+    "create-admin": "tsx src/scripts/create-admin.ts"
   },
   "repository": {
     "type": "git",

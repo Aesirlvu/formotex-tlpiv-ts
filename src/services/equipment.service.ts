@@ -229,7 +229,9 @@ export class EquipmentService {
       throw ERROR_MESSAGES.EQUIPMENT.INVALID_SERIAL_NUMBER;
     }
 
-    const equipment = await this.equipmentRepository.findBySerialNumber(serialNumber);
+    const equipment = await this.equipmentRepository.findBySerialNumber(
+      serialNumber
+    );
 
     if (!equipment) {
       throw ERROR_MESSAGES.EQUIPMENT.NOT_FOUND;
@@ -244,7 +246,7 @@ export class EquipmentService {
 
   async updateStatus(
     id: number,
-    status: string,
+    status: "active" | "inactive" | "maintenance",
     role?: string,
     userId?: number
   ): Promise<Equipment | null> {

@@ -1,26 +1,19 @@
 # FORMOTEX - Sistema de Gestión de Inventario
 
-Sistema backend para la gestión del inventario de equipos informáticos de la empresa FORMOTEX.
+Sistema backend desarrollado en TypeScript para la gestión del inventario de equipos informáticos de la empresa FORMOTEX. Este proyecto es una actividad práctica académica que implementa autenticación JWT, sistema de roles y patrón de arquitectura en capas.
 
-## Arquitectura del Sistema
-
-El sistema FORMOTEX sigue una arquitectura basada en capas con patrones de diseño bien definidos para garantizar la escalabilidad, mantenibilidad y seguridad de la aplicación.
-
-### Flujo de solicitudes HTTP
+## Flujo de la Aplicación
 
 ![Flujo de la Aplicación](./flujo-app.png)
 
-### Patrones de diseño implementados
+## Arquitectura Implementada
 
-El sistema implementa varios patrones de diseño arquitectónicos:
+El proyecto sigue una **Arquitectura por capas** con separación de responsabilidades:
 
-- **Patrón MVC (Model-View-)**: Separación clara entre la lógica de negocio (Model), la presentación (View) y el manejo dControllere solicitudes (Controller).
-
-- **Patrón Repository**: Abstracción del acceso a datos que permite desacoplar la lógica de negocio de la implementación específica de la base de datos.
-
-- **Patrón Service Layer**: Centralización de la lógica de negocio en servicios separados de los controladores, promoviendo la reutilización y testabilidad.
-
-- **Middlewares**: clase "validator" reutilizables para autenticación, autorización y validación de datos.
+- **Controllers**: Manejo de solicitudes HTTP y respuestas
+- **Services**: Lógica de negocio centralizada
+- **Repositories**: Abstracción del acceso a datos
+- **Models**: Definición de entidades con Sequelize
 
 ## Requisitos Previos
 
@@ -28,7 +21,7 @@ El sistema implementa varios patrones de diseño arquitectónicos:
 - npm o yarn
 - Base de datos (MySQL, PostgreSQL o MongoDB)
 
-## Instalación
+## Instalación y Ejecución
 
 1. Clonar el repositorio:
 
@@ -46,14 +39,14 @@ npm install
 3. Configurar variables de entorno:
 
 ```bash
-# Crear archivo .env con las siguientes variables
+# Crear archivo .env
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=formotex
 DB_USER=postgres
 DB_PASSWORD=tu_contraseña
 JWT_SECRET=tu_secreto_jwt
-JWT_EXPIRES_IN=Nh
+JWT_EXPIRES_IN=1h
 PORT=3000
 ```
 
@@ -63,130 +56,115 @@ PORT=3000
 npm run dev
 ```
 
-## Endpoints Disponibles
+## Endpoints Principales
 
-### Rutas de Autenticación (`/api/auth`)
+### Autenticación (`/api/auth`)
 
-- **POST** `/api/auth/register` - Registro de nuevos usuarios
-- **POST** `/api/auth/login` - Inicio de sesión
-- **POST** `/api/auth/logout` - Cierre de sesión
+- `POST /register` - Registro de usuarios (solo admins)
+- `POST /login` - Inicio de sesión
+- `POST /logout` - Cierre de sesión
 
-### Rutas de Usuarios (`/api/users`) - Solo Administradores
+### Gestión de Usuarios (`/api/users`)
 
-- **GET** `/api/users/` - Listar todos los usuarios
-- **GET** `/api/users/:id` - Obtener usuario por ID
-- **POST** `/api/users/` - Crear nuevo usuario
-- **PUT** `/api/users/:id` - Actualizar usuario existente
-- **DELETE** `/api/users/:id` - Eliminar usuario
+- `GET /users` - Listar todos los usuarios (solo admins)
+- `GET /users/:id` - Obtener usuario por ID (solo admins)
+- `POST /users` - Crear nuevo usuario (solo admins)
+- `PUT /users/:id` - Actualizar usuario existente (solo admins)
+- `DELETE /users/:id` - Eliminar usuario (solo admins)
 
-### Rutas de Equipos (`/api/equipment`) - Solo Administradores
+### Gestión de Equipos (`/api/equipment`)
 
-- **GET** `/api/equipment/` - Listar todos los equipos
-- **GET** `/api/equipment/:id` - Obtener equipo por ID
-- **POST** `/api/equipment/` - Crear nuevo equipo
-- **PUT** `/api/equipment/:id` - Actualizar equipo existente
-- **DELETE** `/api/equipment/:id` - Eliminar equipo
-- **POST** `/api/equipment/:id/assign` - Asignar equipo a usuario
-- **POST** `/api/equipment/:id/unassign` - Desasignar equipo de usuario
-- **POST** `/api/equipment/serial/search` - Buscar equipo por número de serie
-- **GET** `/api/equipment/user/:userId` - Obtener equipos de un usuario
-- **PUT** `/api/equipment/:id/status` - Actualizar estado de equipo
+- `GET /equipment` - Listar todos los equipos
+- `GET /equipment/:id` - Obtener equipo por ID
+- `POST /equipment` - Crear nuevo equipo (solo admins)
+- `PUT /equipment/:id` - Actualizar equipo existente (solo admins)
+- `DELETE /equipment/:id` - Eliminar equipo (solo admins)
+- `POST /equipment/:id/assign` - Asignar equipo a usuario (solo admins)
+- `POST /equipment/:id/unassign` - Desasignar equipo de usuario (solo admins)
 
-## Diseño de Relaciones entre Entidades
+### Sistema de Roles
 
-- **Usuario y Equipo**: Relación uno a muchos (1:N) donde un usuario puede tener múltiples equipos asignados
-- **Soft Delete**: Implementado con timestamps paranoid para mantener integridad de datos históricos
-- **Asignación de Equipos**: Sistema flexible que permite asignar y desasignar equipos dinámicamente
+- **Administradores**: Gestión completa de la aplicación, incluyendo usuarios y equipos, con capacidad de asignar y desasignar equipos
+- **Usuarios**: Acceso limitado para consultar únicamente los equipos asignados a su cargo
 
-### Organización de Carpetas
+## Diseño de Entidades
 
-```
-src/
-├── config/          # Configuración de base de datos
-├── controllers/     # Lógica de manejo de requests/responses
-├── helpers/         # Utilidades (bcrypt, JWT, errores)
-├── interfaces/      # Definiciones de tipos TypeScript
-├── main/           # Inicialización de la aplicación
-├── middlewares/    # Autenticación y validaciones
-├── models/         # Modelos de datos Sequelize
-├── repositories/   # Acceso a datos (patrón Repository)
-├── routes/         # Definición de rutas Express
-└── services/       # Lógica de negocio
-```
+### Relaciones Principales
 
-### Propiedades de las Entidades
+- **Usuario y Equipo**: Relación uno a muchos (1:N)
+- **Soft Delete**: Implementado con timestamps paranoid
+- **Asignación Dinámica**: Sistema flexible de asignación de equipos
+
+### Propiedades de Entidades
 
 #### Usuario (User)
 
-- `id`: Identificador único
-- `username`: Nombre de usuario
-- `email`: Correo electrónico (único)
-- `password`: Contraseña hasheada con bcrypt
-- `role`: Rol del usuario ("admin" | "user")
+- `id`, `username`, `email`, `password`, `role`
+- Roles: `"admin"` | `"user"`
 
 #### Equipo (Equipment)
 
-- `id`: Identificador único
-- `name`: Nombre del equipo
-- `type`: Tipo de equipo (laptop, monitor, printer, etc.)
-- `serialNumber`: Número de serie (único)
-- `location`: Ubicación física
-- `status`: Estado ("active" | "inactive" | "maintenance")
-- `purchaseDate`: Fecha de compra
-- `userId`: ID del usuario asignado (nullable)
+- `id`, `name`, `type`, `serialNumber`, `location`, `status`, `purchaseDate`, `userId`
 
-### Elección de Librerías y Patrones de Arquitectura
+## Sistema de Seguridad
 
-**Librerías Principales:**
+### Autenticación
 
-- **Express**
-- **Sequelize**
-- **bcrypt**
-- **jsonwebtoken**
-- **express-validator**
-- **TypeScript**
-
-**Patrones de Arquitectura:**
-
-- **MVC**: Separación clara entre Modelo, Vista y Controlador
-- **Repository Pattern**: Abstracción del acceso a datos
-- **Service Layer**: Lógica de negocio separada de los controladores
-- **Middleware Pattern**: Para autenticación y validaciones reutilizables
-
-### Sistema de Roles y Permisos
-
-**Roles Definidos:**
-
-- **admin**: Acceso completo a todos los endpoints CRUD y gestión de usuarios
-- **user**: Acceso limitado a sus propios equipos asignados
-
-**Control de Acceso:**
-
-- Middleware de autenticación verifica tokens JWT válidos
-- Middleware de autorización valida roles específicos por endpoint
-- Validaciones de ownership para asegurar que los usuarios solo gestionen sus recursos
-
-### Validaciones y Seguridad
-
-**Validaciones de Datos:**
-
-- Email con formato válido y único
-- Contraseñas con longitud mínima
-- Campos requeridos en todas las operaciones CRUD
-- Enum values para roles y estados
-
-**Medidas de Seguridad:**
-
-- Hasheo de contraseñas con bcrypt (salt rounds: 10)
 - Tokens JWT con expiración (1 hora)
-- Validación de inputs contra inyección de datos
-- No exposición de información sensible en respuestas de error
+- Middleware de verificación de tokens
 
-### Manejo de Errores
+### Autorización (RBAC)
 
-Sistema centralizado de errores mediante objeto `ERROR_MESSAGES` con:
+- **admin**: Acceso completo a todos los endpoints
+- **user**: Acceso limitado a sus equipos asignados
+- Validación de ownership en recursos
 
-- Mensajes consistentes en español
-- Códigos HTTP apropiados para cada tipo de error
-- Formato estándar de respuestas `{message, success, error?}`
-- Diferenciación clara entre errores de validación, autorización y del sistema
+### Validaciones
+
+- Unicidad de email y número de serie
+- Campos requeridos en operaciones CRUD
+- Enum values para roles y estados
+- Password hasheado con bcrypt
+
+## Tecnologías Utilizadas
+
+**Stack Principal:**
+
+- Node.js + Express + TypeScript
+- Sequelize (ORM)
+- MySQL/PostgreSQL/MongoDB
+- JSON Web Token (JWT)
+- bcrypt
+- express-validator
+
+**Patrones Arquitectónicos:**
+
+- Layered Architecture
+- Repository Pattern
+- Service Layer
+- Dependency Injection
+- Middleware Pattern
+
+---
+
+## Justificación Técnica
+
+### Organización de Carpetas
+
+La estructura modular separa claramente las responsabilidades:
+
+- `src/controllers/` - Manejo HTTP
+- `src/services/` - Lógica de negocio
+- `src/repositories/` - Acceso a datos
+- `src/models/` - Definición de entidades
+- `src/middlewares/` - Componentes reutilizables
+
+### Elección de Patrones
+
+- **Repository Pattern**: Desacopla la lógica de negocio de la implementación de base de datos
+- **Service Layer**: Centraliza la lógica de negocio para reutilización y testabilidad
+- **Dependency Injection**: Facilita las pruebas y mantenimiento del código
+
+### Diseño de Relaciones
+
+La relación 1:N entre usuarios y equipos permite una gestión eficiente con asignación flexible y control de acceso basado en ownership.

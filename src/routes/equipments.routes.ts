@@ -16,7 +16,7 @@ router.use(Authorization.isAuthenticated);
 router.get(
   "/",
   Authorization.isAdmin,
-  equipmentController.getEquipment.bind(equipmentController)
+  equipmentController.getEquipments.bind(equipmentController)
 );
 router.get(
   "/:id",
@@ -32,7 +32,7 @@ router.post(
   equipmentController.createEquipment.bind(equipmentController)
 );
 
-router.put(
+router.patch(
   "/:id",
   Authorization.isAdmin,
   Validator.equipmentUpdate(),
@@ -46,7 +46,7 @@ router.delete(
   equipmentController.deleteEquipment.bind(equipmentController)
 );
 
-// Rutas extra
+// ? Rutas extra
 router.post(
   "/:id/assign",
   Authorization.isAdmin,
@@ -67,12 +67,19 @@ router.get(
   Authorization.isAuthenticated,
   equipmentController.getAvailableEquipment.bind(equipmentController)
 );
+
+router.get(
+  "/:id/status",
+  Authorization.isAdmin,
+  equipmentController.getEquipmentStatus.bind(equipmentController)
+);
+
 router.put(
   "/:id/status",
   Authorization.isAdmin,
   equipmentController.updateEquipmentStatus.bind(equipmentController)
 );
-router.post(
+router.get(
   "/serial/search",
   Authorization.isAuthenticated,
   Validator.equipmentSerialSearch(),

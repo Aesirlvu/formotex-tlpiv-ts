@@ -12,6 +12,6 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 
 // ? Rutas de equipos
-router.use("/equipment", equipmentRoutes);
+router.use("/equipments", equipmentRoutes);
 
 export default router;
